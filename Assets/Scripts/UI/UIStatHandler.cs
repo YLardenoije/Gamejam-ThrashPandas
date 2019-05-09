@@ -21,11 +21,10 @@ public class UIStatHandler : MonoBehaviour
     }
     void UpdateBars()
     {
+        //this will map the value between 0 and 1.
+        HappinessMeter.value = Stats.Happiness/Stats.MaxStatValue;
+        HungerMeter.value = Stats.Hunger / Stats.MaxStatValue;
+        SocializationMeter.value = Stats.SocialRating / Stats.MaxStatValue;
+    }
 
-    }
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
