@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: e1cbe91df500e20448aa8023580f2ef2
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - Stats: {fileID: 11400000, guid: 0f7222723b1c8894bb409ee04d570cfb, type: 2}
+  - HappinessMeter: {instanceID: 0}
+  - HungerMeter: {instanceID: 0}
+  - SocializationMeter: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
