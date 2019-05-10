@@ -1,11 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using ZXing;
 using ZXing.QrCode;
 
 public class MultiplayerQRCode : MonoBehaviour
 {
+    [SerializeField] private Text ChallengeTextBox;
+    [SerializeField] private Challenge challenge; 
+    [SerializeField] private SOStats stats;
     Texture2D myQR;
     // Start is called before the first frame update
     WebCamTexture camTexture;
@@ -15,6 +19,8 @@ public class MultiplayerQRCode : MonoBehaviour
 
     void Start()
     {
+        stats.ClearValues();
+        ChallengeTextBox.text = challenge.ToString();
         CurrentState = State.idle;
         screenRect = new Rect(0, 0, Screen.width, Screen.height / 2);
         camTexture = new WebCamTexture();
@@ -43,16 +49,14 @@ public class MultiplayerQRCode : MonoBehaviour
             CurrentState = State.idle;
             return;
         }
-        
-
-       
         CurrentState = State.ReadQRCode;
     }
     void OnGUI()
     {
+
         if (CurrentState == State.ShowQRCode)
         {
-            myQR = generateQR("PITCH at 4 AM. #TAMAFOODCHI");
+            myQR = generateQR(stats.AnimalType + "," + stats.Happiness + "," + stats.Hunger +"," + stats.SocialRating+ "," + stats.XP);
             
             if (GUI.Button(new Rect(0, 0, 256, 256), myQR, GUIStyle.none)) { }
         }
@@ -70,6 +74,9 @@ public class MultiplayerQRCode : MonoBehaviour
                 if (result != null)
                 {
                     Debug.Log("DECODED TEXT FROM QR: " + result.Text);
+                    challenge.CheckForCompletion(result.Text);
+                    ChallengeTextBox.text = challenge.ToString();
+                    
                 }
             }
             catch (System.Exception ex) { Debug.LogWarning(ex.Message); }

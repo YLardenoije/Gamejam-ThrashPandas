@@ -7,14 +7,23 @@ using UnityEngine.Events;
 public class SOStats : ScriptableObject
 {
     public float MaxStatValue = 100;
-    public UnityEvent happinessChanged = new UnityEvent();
-    public UnityEvent SocialRatingChanged = new UnityEvent();
-    public UnityEvent HungerChanged = new UnityEvent();
+    public string AnimalType = "Raccoon";
+    
     public float Happiness { get; private set; }
     public float SocialRating { get; private set; }
     public float Hunger { get; private set; }
+    public int XP { get; private set; }
 
-  
+    public UnityEvent happinessChanged = new UnityEvent();
+    public UnityEvent SocialRatingChanged = new UnityEvent();
+    public UnityEvent HungerChanged = new UnityEvent();
+    public UnityEvent XPChanged = new UnityEvent();
+
+    public void AddXP(int amount)
+    {
+        XP += amount;
+        XPChanged.Invoke();
+    }
     public void addHappiness(int change)
     {
         if ((Happiness+ change <= MaxStatValue) && (Happiness + change >= 0))
@@ -76,6 +85,7 @@ public class SOStats : ScriptableObject
         Hunger = 0.5f*MaxStatValue;
         SocialRating = 0.5f * MaxStatValue;
         Happiness = 0.5f * MaxStatValue;
+        XP = 0;
         happinessChanged = new UnityEvent();
         SocialRatingChanged = new UnityEvent();
         HungerChanged = new UnityEvent();
