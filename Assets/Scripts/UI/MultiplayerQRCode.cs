@@ -17,6 +17,11 @@ public class MultiplayerQRCode : MonoBehaviour
     private enum State { idle = 0, ShowQRCode, ReadQRCode }
     State CurrentState = State.idle;
 
+    private void OnDestroy()
+    {
+        camTexture.Stop();
+    }
+
     void Start()
     {
         stats.ClearValues();
@@ -62,24 +67,26 @@ public class MultiplayerQRCode : MonoBehaviour
         }
         if (CurrentState == State.ReadQRCode)
         {
-           
             // drawing the camera on screen
             GUI.DrawTexture(screenRect, camTexture, ScaleMode.ScaleToFit);
-            // do the reading — you might want to attempt to read less often than you draw on the screen for performance sake
-            try
+            if (Time.frameCount % 20 == 0)
             {
-                IBarcodeReader barcodeReader = new BarcodeReader();
-                // decode the current frame
-                var result = barcodeReader.Decode(camTexture.GetPixels32(), camTexture.width, camTexture.height);
-                if (result != null)
+                // do the reading — you might want to attempt to read less often than you draw on the screen for performance sake
+                try
                 {
-                    Debug.Log("DECODED TEXT FROM QR: " + result.Text);
-                    challenge.CheckForCompletion(result.Text);
-                    ChallengeTextBox.text = challenge.ToString();
-                    
+                    IBarcodeReader barcodeReader = new BarcodeReader();
+                    // decode the current frame
+                    var result = barcodeReader.Decode(camTexture.GetPixels32(), camTexture.width, camTexture.height);
+                    if (result != null)
+                    {
+                        Debug.Log("DECODED TEXT FROM QR: " + result.Text);
+                        challenge.CheckForCompletion(result.Text);
+                        ChallengeTextBox.text = challenge.ToString();
+
+                    }
                 }
+                catch (System.Exception ex) { Debug.LogWarning(ex.Message); }
             }
-            catch (System.Exception ex) { Debug.LogWarning(ex.Message); }
         }
     }
     public static Color32[] Encode(string textForEncoding, int width, int height)

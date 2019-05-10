@@ -1,16 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
+using UnityEngine.UI;
 using ZXing;
 using ZXing.QrCode;
+using UnityEngine.SceneManagement;
 
 public class QrHandler : MonoBehaviour
 {
+    [SerializeField] SOStats stats;
+    [SerializeField] Text text;
     // Start is called before the first frame update
 
 
-private WebCamTexture camTexture;
-private Rect screenRect;
+    private WebCamTexture camTexture;
+    private Rect screenRect;
     void Start()
     {
        
@@ -22,52 +27,43 @@ private Rect screenRect;
         if (camTexture != null)
         {
             camTexture.Play();
+            
         }
     
        
         
     }
 
+    private void OnDestroy()
+    {
+        camTexture.Stop();
+    }
+
     void OnGUI()
     {
-        var myQR = generateQR("google.com");
-        if (GUI.Button(new Rect(0, 0, 256, 256), myQR, GUIStyle.none)) { }
+       
         // drawing the camera on screen
         GUI.DrawTexture(screenRect, camTexture, ScaleMode.ScaleToFit);
         // do the reading — you might want to attempt to read less often than you draw on the screen for performance sake
-        try
+        if (Time.frameCount % 20 == 0)
         {
-            IBarcodeReader barcodeReader = new BarcodeReader();
-            // decode the current frame
-            var result = barcodeReader.Decode(camTexture.GetPixels32(),
-              camTexture.width, camTexture.height);
-            if (result != null)
+            try
             {
-                Debug.Log("DECODED TEXT FROM QR: " +result.Text);
+                IBarcodeReader barcodeReader = new BarcodeReader();
+                // decode the current frame
+                var result = barcodeReader.Decode(camTexture.GetPixels32(),
+                  camTexture.width, camTexture.height);
+                if (result != null)
+                {
+                    Debug.Log("DECODED TEXT FROM QR: " + result.Text);
+                    stats.addHunger(Convert.ToInt32(result.Text));
+                    text.enabled = true;
+                    Debug.Log("below enabled");
+                }
             }
+            catch (System.Exception ex) { Debug.LogWarning(ex.Message); }
         }
-        catch (System.Exception ex) { Debug.LogWarning(ex.Message); }
     }
-    public static Color32[] Encode(string textForEncoding, int width, int height)
-    {
-        var writer = new BarcodeWriter
-        {
-            Format = BarcodeFormat.QR_CODE,
-            Options = new QrCodeEncodingOptions
-            {
-                Height = height,
-                Width = width
-            }
-        };
-        return writer.Write(textForEncoding);
-    }
-    public Texture2D generateQR(string text)
-    {
-        var encoded = new Texture2D(256, 256);
-        var color32 = Encode(text, encoded.width, encoded.height);
-        encoded.SetPixels32(color32);
-        encoded.Apply();
-        return encoded;
-    }
+   
 
 }

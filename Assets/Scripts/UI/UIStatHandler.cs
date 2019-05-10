@@ -10,13 +10,19 @@ public class UIStatHandler : MonoBehaviour
     [SerializeField] private Slider HappinessMeter;
     [SerializeField] private Slider HungerMeter;
     [SerializeField] private Slider SocializationMeter;
+    [SerializeField] private Text XPAmount;
 
     // Start is called before the first frame update
     void Start()
     {
+        Stats.ClearValues();
         Stats.happinessChanged.AddListener(UpdateBars);
         Stats.HungerChanged.AddListener(UpdateBars);
         Stats.SocialRatingChanged.AddListener(UpdateBars);
+        Stats.XPChanged.AddListener(UpdateBars);
+       
+        UpdateBars();
+        
 
     }
     void UpdateBars()
@@ -25,6 +31,7 @@ public class UIStatHandler : MonoBehaviour
         HappinessMeter.value = Stats.Happiness/Stats.MaxStatValue;
         HungerMeter.value = Stats.Hunger / Stats.MaxStatValue;
         SocializationMeter.value = Stats.SocialRating / Stats.MaxStatValue;
+        XPAmount.text = Stats.XP.ToString();
     }
 
 }

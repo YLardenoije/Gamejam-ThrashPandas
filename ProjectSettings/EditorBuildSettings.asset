@@ -4,5 +4,14 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Tamafoodchi.unity
+    guid: b7b4939e8623ee5439df3fb2532e6a52
+  - enabled: 1
+    path: Assets/Scenes/Hotspot.unity
+    guid: 59471810a460f4742b0dd2c382dc51cc
+  - enabled: 1
+    path: Assets/Scenes/Interaction.unity
+    guid: 252ac696b0f4e1841b8d34ffb4889ef8
   m_configObjects: {}
